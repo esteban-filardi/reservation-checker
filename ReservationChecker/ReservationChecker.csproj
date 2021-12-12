@@ -7,8 +7,10 @@
     <Nullable>enable</Nullable>
     <UserSecretsId>ec1d91bb-b9b9-457c-aab4-bad0faffba4e</UserSecretsId>
   </PropertyGroup>
-
+	
   <ItemGroup>
+	<!-- Required, othewrise user secrets are not loaded as configurations -->
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
   </ItemGroup>
 
