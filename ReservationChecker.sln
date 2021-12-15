@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReservationChecker", "ReservationChecker\ReservationChecker.csproj", "{6B79E7FE-97A6-4B67-A709-036EE00C81B8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReservationChecker.Tests", "tests\ReservationChecker.Tests\ReservationChecker.Tests.csproj", "{B6DEB5FB-EC7C-4663-B8F8-D43D86E70CA4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6B79E7FE-97A6-4B67-A709-036EE00C81B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B79E7FE-97A6-4B67-A709-036EE00C81B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B79E7FE-97A6-4B67-A709-036EE00C81B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6DEB5FB-EC7C-4663-B8F8-D43D86E70CA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6DEB5FB-EC7C-4663-B8F8-D43D86E70CA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6DEB5FB-EC7C-4663-B8F8-D43D86E70CA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6DEB5FB-EC7C-4663-B8F8-D43D86E70CA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

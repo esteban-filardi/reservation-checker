@@ -12,13 +12,16 @@ public class AplicationHostedService : IHostedService
 {
     private readonly ILogger _logger;
     private readonly IHostApplicationLifetime _appLifetime;
+    private readonly Checker.ReservationChecker _reservationChecker;
 
     public AplicationHostedService(
         ILogger<AplicationHostedService> logger,
-        IHostApplicationLifetime appLifetime)
+        IHostApplicationLifetime appLifetime,
+        Checker.ReservationChecker reservationChecker)
     {
         _logger = logger;
         _appLifetime = appLifetime;
+        _reservationChecker = reservationChecker;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -27,7 +30,7 @@ public class AplicationHostedService : IHostedService
         {
             try
             {
-                _logger.LogInformation($"Starting");
+                await _reservationChecker.Execute();
             }
             catch (Exception ex)
             {
