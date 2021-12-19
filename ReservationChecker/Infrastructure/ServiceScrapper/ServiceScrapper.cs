@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using ReservationChecker.Application;
 using ReservationChecker.ServiceScrapper.Models;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,7 @@ public class ServiceScrapper : IServiceScrapper
         return httpClient.SendAsync(request);
     }
 
-    public async Task<IEnumerable<RetrieveServicesResponse>> RetrieveServices()
+    public async Task<IEnumerable<Service>> RetrieveServices()
     {
         await PerformLogin();
 
@@ -49,7 +50,7 @@ public class ServiceScrapper : IServiceScrapper
 
         var request = new HttpRequestMessage(new HttpMethod("GET"), servicesEndpointUrl);
 
-        return await httpClient.GetFromJsonAsync<IEnumerable<RetrieveServicesResponse>>(request.RequestUri) ??
-            new List<RetrieveServicesResponse>();
+        return await httpClient.GetFromJsonAsync<IEnumerable<Service>>(request.RequestUri) ??
+            new List<Service>();
     }
 }

@@ -1,5 +1,4 @@
-﻿using ReservationChecker.ServiceScrapper;
-using ReservationChecker.ServiceScrapper.Models;
+﻿using ReservationChecker.ServiceScrapper.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ReservationChecker.Application
 {
-    public class InterestingServicesFinder
+    public class InterestingServicesFinder : IInterestingServicesFinder
     {
 
         private readonly HashSet<int> UnrelevantServicesIds = new() { 554, 699, 901 };
@@ -19,9 +18,9 @@ namespace ReservationChecker.Application
             _serviceScrapper = serviceScrapper;
         }
 
-        public async Task<IEnumerable<RetrieveServicesResponse>> FindInterestingServices ()
+        public async Task<IEnumerable<Service>> FindInterestingServices()
         {
-            IEnumerable<RetrieveServicesResponse> availableServices = await _serviceScrapper.RetrieveServices();
+            IEnumerable<Service> availableServices = await _serviceScrapper.RetrieveServices();
 
             return availableServices.Where(s => !s.ServiceId.HasValue || !UnrelevantServicesIds.Contains(s.ServiceId.Value));
         }

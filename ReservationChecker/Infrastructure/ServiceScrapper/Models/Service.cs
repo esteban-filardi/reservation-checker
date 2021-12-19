@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace ReservationChecker.ServiceScrapper.Models;
 
-public class RetrieveServicesResponse
+public class Service
 {
-    [JsonPropertyName("IdServizioErogato")]
+
     public int? ServiceId { get; set; }
+    public string? ProviderServiceDescription { get; set; }
+
 }

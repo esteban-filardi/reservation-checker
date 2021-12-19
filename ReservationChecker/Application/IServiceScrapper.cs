@@ -1,9 +1,8 @@
 ﻿using ReservationChecker.ServiceScrapper.Models;
 
-namespace ReservationChecker.ServiceScrapper
+namespace ReservationChecker.Application;
+
+public interface IServiceScrapper
 {
-    public interface IServiceScrapper
-    {
-        Task<IEnumerable<RetrieveServicesResponse>> RetrieveServices();
-    }
+    Task<IEnumerable<Service>> RetrieveServices();
 }

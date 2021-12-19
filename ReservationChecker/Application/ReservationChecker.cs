@@ -5,41 +5,56 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using ReservationChecker.Application;
 using ReservationChecker.ServiceScrapper;
 using ReservationChecker.ServiceScrapper.Models;
 
-namespace ReservationChecker.Checker
+namespace ReservationChecker.Application;
+
+public class ReservationChecker
 {
-    public class ReservationChecker
+    private readonly ILogger _logger;
+    private readonly IConfiguration _config;
+    private readonly IInterestingServicesFinder _interestingServicesFinder;
+
+    public ReservationChecker(
+        ILogger<ReservationChecker> logger,
+        IConfiguration config,
+        IInterestingServicesFinder interestingServicesFinder)
     {
-        private readonly ILogger _logger;
-        private readonly IConfiguration _config;
-        private readonly InterestingServicesFinder _interestingServicesFinder;
+        _logger = logger;
+        _config = config;
+        _interestingServicesFinder = interestingServicesFinder;
+    }
 
-        public ReservationChecker(
-            ILogger<ReservationChecker> logger,
-            IConfiguration config,
-            InterestingServicesFinder interestingServicesFinder)
+    const string loggerTemplate = $"New interesting services available!{{ServiceDetails}}";
+
+    public async Task<int> Execute()
+    {
+        IEnumerable<Service> interestingServices = await _interestingServicesFinder.FindInterestingServices();
+
+        if (interestingServices.Any())
         {
-            _logger = logger;
-            _config = config;
-            _interestingServicesFinder = interestingServicesFinder;
+            LogInterestServicesFound(interestingServices);
+        }
+        else
+        {
+            _logger.LogInformation("No interesting services available:");            
         }
 
-        public async Task<int> Execute()
+        return 0;
+    }
+
+    private void LogInterestServicesFound(IEnumerable<Service> interestingServices)
+    {
+        var serviceDetailsBuilder = new StringBuilder();
+        serviceDetailsBuilder.AppendLine();
+        foreach (var service in interestingServices)
         {
-            IEnumerable<RetrieveServicesResponse> interestingServices = await _interestingServicesFinder.FindInterestingServices();
-
-            if (!interestingServices.Any())
-            {
-                Console.WriteLine("No interesting service available");
-            } else
-            {
-                Console.WriteLine("Interesting services available");
-            }
-
-            return 0;
+            serviceDetailsBuilder.AppendLine();
+            serviceDetailsBuilder.AppendLine($"Service Id: {service.ServiceId}");
+            serviceDetailsBuilder.AppendLine($"Description: {service.ProviderServiceDescription}");
         }
+
+        _logger.LogInformation(loggerTemplate, serviceDetailsBuilder.ToString());
     }
 }

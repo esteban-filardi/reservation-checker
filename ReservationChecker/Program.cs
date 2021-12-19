@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ReservationChecker.Application;
-using ReservationChecker.ServiceScrapper;
 
 namespace ReservationChecker;
 
@@ -9,7 +8,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        IHostBuilder hostBuilder = CreateHostBuilder(args);                
+        IHostBuilder hostBuilder = CreateHostBuilder(args);
         
         using IHost host = hostBuilder.Build();        
 
@@ -21,8 +20,8 @@ class Program
         .ConfigureServices((hostContext, services) =>
         {
             services.AddSingleton<IServiceScrapper, ServiceScrapper.ServiceScrapper>();
-            services.AddSingleton<InterestingServicesFinder>();
-            services.AddSingleton<Checker.ReservationChecker>();
+            services.AddSingleton<IInterestingServicesFinder, InterestingServicesFinder>();
+            services.AddSingleton<Application.ReservationChecker>();
 
             services.AddHostedService<AplicationHostedService>();
 
