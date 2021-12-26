@@ -15,15 +15,18 @@ public class ReservationChecker
     private readonly ILogger _logger;
     private readonly IConfiguration _config;
     private readonly IInterestingServicesFinder _interestingServicesFinder;
+    private readonly IEmailNotifier _emailNotifier;
 
     public ReservationChecker(
         ILogger<ReservationChecker> logger,
         IConfiguration config,
-        IInterestingServicesFinder interestingServicesFinder)
+        IInterestingServicesFinder interestingServicesFinder,
+        IEmailNotifier emailNotifier)
     {
         _logger = logger;
         _config = config;
         _interestingServicesFinder = interestingServicesFinder;
+        _emailNotifier = emailNotifier;
     }
 
     const string loggerTemplate = $"New interesting services available!{{ServiceDetails}}";
@@ -35,10 +38,11 @@ public class ReservationChecker
         if (interestingServices.Any())
         {
             LogInterestServicesFound(interestingServices);
+            _emailNotifier.NotifyInterestingServices(interestingServices);
         }
         else
         {
-            _logger.LogInformation("No interesting services available:");            
+            _logger.LogInformation("No interesting services available");
         }
 
         return 0;
@@ -51,8 +55,7 @@ public class ReservationChecker
         foreach (var service in interestingServices)
         {
             serviceDetailsBuilder.AppendLine();
-            serviceDetailsBuilder.AppendLine($"Service Id: {service.ServiceId}");
-            serviceDetailsBuilder.AppendLine($"Description: {service.ProviderServiceDescription}");
+            serviceDetailsBuilder.AppendLine(service.ToString());            
         }
 
         _logger.LogInformation(loggerTemplate, serviceDetailsBuilder.ToString());

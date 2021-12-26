@@ -9,8 +9,14 @@ namespace ReservationChecker.ServiceScrapper.Models;
 
 public class Service
 {
-
     public int? ServiceId { get; set; }
     public string? ProviderServiceDescription { get; set; }
+    public override string? ToString()
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine($"Service Id: {ServiceId}");
+        sb.AppendLine($"Description: {ProviderServiceDescription}");
 
+        return sb.ToString();
+    }
 }

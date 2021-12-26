@@ -9,7 +9,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReservationChecker.ServiceScrapper;
+namespace ReservationChecker.Infrastructure.ServiceScrapper;
 
 public class ServiceScrapper : IServiceScrapper
 {

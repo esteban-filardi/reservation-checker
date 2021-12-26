@@ -6,18 +6,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReservationChecker;
+namespace ReservationChecker.Infrastructure;
 
 public class AplicationHostedService : IHostedService
 {
     private readonly ILogger _logger;
     private readonly IHostApplicationLifetime _appLifetime;
-    private readonly Checker.ReservationChecker _reservationChecker;
+    private readonly Application.ReservationChecker _reservationChecker;
+    private Timer _timer = null!;
 
     public AplicationHostedService(
         ILogger<AplicationHostedService> logger,
         IHostApplicationLifetime appLifetime,
-        Checker.ReservationChecker reservationChecker)
+        Application.ReservationChecker reservationChecker)
     {
         _logger = logger;
         _appLifetime = appLifetime;
@@ -26,20 +27,18 @@ public class AplicationHostedService : IHostedService
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _appLifetime.ApplicationStarted.Register(async () =>
+        _appLifetime.ApplicationStarted.Register(() =>
         {
             try
             {
-                await _reservationChecker.Execute();
+                _timer = new Timer(async (state) =>
+                {
+                    await _reservationChecker.Execute();
+                }, null, TimeSpan.Zero, TimeSpan.FromMinutes(15));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unhandled exception");
-            }
-            finally
-            {
-                // Stop the application once the work is done
-                _appLifetime.StopApplication();
             }
         });
 
@@ -48,6 +47,10 @@ public class AplicationHostedService : IHostedService
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Application Hosted Service is stopping.");
+
+        _timer?.Change(Timeout.Infinite, 0);
+
         return Task.CompletedTask;
     }
 }

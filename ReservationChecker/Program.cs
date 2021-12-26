@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ReservationChecker.Application;
+using ReservationChecker.Infrastructure;
 
 namespace ReservationChecker;
 
@@ -19,8 +20,9 @@ class Program
         Host.CreateDefaultBuilder(args)
         .ConfigureServices((hostContext, services) =>
         {
-            services.AddSingleton<IServiceScrapper, ServiceScrapper.ServiceScrapper>();
+            services.AddSingleton<IServiceScrapper, Infrastructure.ServiceScrapper.ServiceScrapper>();
             services.AddSingleton<IInterestingServicesFinder, InterestingServicesFinder>();
+            services.AddSingleton<IEmailNotifier, EmailNotifier>();
             services.AddSingleton<Application.ReservationChecker>();
 
             services.AddHostedService<AplicationHostedService>();

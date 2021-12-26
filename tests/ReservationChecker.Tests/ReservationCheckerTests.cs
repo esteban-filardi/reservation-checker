@@ -15,12 +15,14 @@ public class ReservationCheckerTests
     private readonly Mock<ILogger<Application.ReservationChecker>> _loggerMock;
     private readonly Mock<IConfiguration> _configurationMock;
     private readonly Mock<IInterestingServicesFinder> _interestingServiceFinder;
+    private readonly Mock<IEmailNotifier> _emailNotifierMock;
 
     public ReservationCheckerTests()
     {
         _loggerMock = new Mock<ILogger<Application.ReservationChecker>>();
         _configurationMock = new Mock<IConfiguration>();
         _interestingServiceFinder = new Mock<IInterestingServicesFinder>();
+        _emailNotifierMock = new Mock<IEmailNotifier>();
     }
 
     private Application.ReservationChecker CreateReservationChecker()
@@ -34,7 +36,8 @@ public class ReservationCheckerTests
 
         var reservationChecker = new Application.ReservationChecker(_loggerMock.Object,
             _configurationMock.Object,
-            _interestingServiceFinder.Object);
+            _interestingServiceFinder.Object,
+            _emailNotifierMock.Object);
         return reservationChecker;
     }
 
@@ -52,5 +55,14 @@ public class ReservationCheckerTests
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
+    }
+
+    [Fact]
+    async void Should_send_an_email_when_there_is_a_new_service_available()
+    {
+        Application.ReservationChecker reservationChecker = CreateReservationChecker();
+        await reservationChecker.Execute();
+
+        _emailNotifierMock.Verify(n => n.NotifyInterestingServices(_interestingServiceFinder.Object.FindInterestingServices().Result));
     }
 }
