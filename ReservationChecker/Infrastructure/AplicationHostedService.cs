@@ -33,7 +33,13 @@ public class AplicationHostedService : IHostedService
             {
                 _timer = new Timer(async (state) =>
                 {
-                    await _reservationChecker.Execute();
+                    try
+                    {
+                        await _reservationChecker.Execute();
+                    } catch (Exception exception)
+                    {
+                        _logger.LogError(exception.ToString());
+                    }
                 }, null, TimeSpan.Zero, TimeSpan.FromMinutes(15));
             }
             catch (Exception ex)
